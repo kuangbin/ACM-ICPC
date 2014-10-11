@@ -1,37 +1,13 @@
 import java.util.*;
-import java.io.*;
 import java.math.*;
 
 public class Solution
 {
 	static int P;
-	class Matrix{
-		int [][]mat = new int[100][100];
-		int n;
-		void init(int _n){
-			n = _n;
-			//Arrays.fill(mat, 0);
-			for(int i = 0;i < n;i++)
-				for(int j = 0;j < n;j++)
-					mat[i][j] = 0;
-		}
-		Matrix mul(Matrix b){
-			Matrix ret = new Matrix();
-			ret.init(n);
-			for(int i = 0;i < n;i++)
-				for(int j = 0;j < n;j++){
-					for(int k = 0;k < n;k++){
-						ret.mat[i][j] = ret.mat[i][j] + mat[i][k]*b.mat[k][j]%P;
-						ret.mat[i][j] %= P;
-					}
-				}
-			return ret;
-		}
-	}
 	static Matrix pow_M(Matrix a,BigInteger n){
-		Matrix ret = new Solution().new Matrix();
+		Matrix ret = new Matrix();
 		Matrix tmp = a;
-		ret.init(a.n);
+		ret.init(a.n,P);
 		for(int i = 0;i < a.n;i++)
 			ret.mat[i][i] = 1;
 		while(!n.equals(BigInteger.ZERO)){
@@ -63,8 +39,8 @@ public class Solution
 			n = cin.nextBigInteger();
 			m = cin.nextInt();
 			P = cin.nextInt();
-			Matrix a = new Solution().new Matrix();
-			a.init(1<<m);
+			Matrix a = new Matrix();
+			a.init(1<<m,P);
 			for(int i = 0;i < (1<<m);i++)
 				for(int j = 0;j < (1<<m);j++)
 					if(check(i,j,m))
@@ -78,7 +54,30 @@ public class Solution
 				}
 			System.out.println(ans);
 		}
-
+		cin.close();
 	}
-
+}
+class Matrix{
+	static int P;
+	int [][]mat = new int[100][100];
+	int n;
+	void init(int _n,int _p){
+		n = _n;
+		P = _p;
+		for(int i = 0;i < n;i++)
+			for(int j = 0;j < n;j++)
+				mat[i][j] = 0;
+	}
+	Matrix mul(Matrix b){
+		Matrix ret = new Matrix();
+		ret.init(n,P);
+		for(int i = 0;i < n;i++)
+			for(int j = 0;j < n;j++){
+				for(int k = 0;k < n;k++){
+					ret.mat[i][j] = ret.mat[i][j] + mat[i][k]*b.mat[k][j]%P;
+					ret.mat[i][j] %= P;
+				}
+			}
+		return ret;
+	}
 }
